@@ -34,7 +34,9 @@ public class PersonController {
     }
 
     @GetMapping("/search")
-    public Page<Person> search(@RequestParam(name = "q") String query, Pageable pageable) {
-        return personRepository.findAll(pageable);
+    public List<Person> search(@RequestParam(name = "q") String query, Pageable pageable) {
+        return personRepository.findByFirstName(query);
     }
+
+
 }

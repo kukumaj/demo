@@ -3,15 +3,15 @@ package pl.ryszard.demo.model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import pl.ryszard.demo.repository.PersonRepository;
 
 import java.util.List;
 
 @Component
 public class DemoCommandLineRunner implements CommandLineRunner {
 
+    @Autowired
 
-    private PersonRepository personRepository;
+    private JpaPersonRepository personRepository;
 
     @Override
     public void run(String... args) {
