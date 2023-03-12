@@ -12,7 +12,4 @@ public class DatabaseInitializer {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void init() {
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS users (id INT, name VARCHAR(255))");
-    }
 }

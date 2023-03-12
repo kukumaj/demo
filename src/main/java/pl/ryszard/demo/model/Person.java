@@ -25,6 +25,13 @@ public class Person {
 
     }
 
+    public Person( String firstName, String lastName, int age) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.age = age;
+    }
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }

@@ -1,11 +1,135 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-  <h1>Hello</h1>
+    <meta charset="utf-8">
+    <title>Single Page Application w jQuery</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
+<div id="content"></div>
+<!-- formularz do dodawania osoby -->
+<form>
+    <label for="firstName">Imię:</label>
+    <input type="text" id="firstName" name="firstName">
+    <br>
+    <label for="lastName">Nazwisko:</label>
+    <input type="text" id="lastName" name="lastName">
+    <br>
+    <label for="age">Wiek:</label>
+    <input type="number" id="age" name="age">
+    <br>
+    <input type="button" id="add-btn" value="Dodaj">
+</form>
+<script>
+    function loadPersons() {
+        $.ajax({
+            type: "GET",
+            url: "/api/persons",
+            success: function (response) {
+                var html = "<table>";
+                html += "<tr><th>Imię</th><th>Nazwisko</th><th>Wiek</th><th>Akcje</th></tr>";
+                for (var i = 0; i < response.length; i++) {
+                    var person = response[i];
+                    html += "<tr>";
+                    html += "<td><input type='text' id='first-name-" + person.id + "' value='" + person.firstName + "'></td>";
+                    html += "<td><input type='text' id='last-name-" + person.id + "' value='" + person.lastName + "'></td>";
+                    html += "<td><input type='number' id='age-" + person.id + "' value='" + person.age + "'></td>";
+                    html += "<td>";
+                    html += "<button class='delete-btn' data-id='" + person.id + "'>Usuń</button>";
+                    html += "<button class='update-btn' data-id='" + person.id + "'>Aktualizuj</button>";
+                    html += "</td>";
+                    html += "</tr>";
+                }
 
+                html += "</table>";
+                $("#content").html(html);
+            },
+            error: function (error) {
+                console.log(error);
+            },
+        });
+    }
+
+    function addPerson(firstName, lastName, age) {
+        var data = {
+            firstName: firstName,
+            lastName: lastName,
+            age: age,
+        };
+        $.ajax({
+            type: "POST",
+            url: "/api/persons",
+            data: JSON.stringify(data),
+            contentType: "application/json",
+            success: function (response) {
+                console.log(response);
+                loadPersons();
+            },
+            error: function (error) {
+                console.log(error);
+            },
+        });
+    }
+
+    function deletePerson(id) {
+        $.ajax({
+            type: "DELETE",
+            url: "/api/persons/" + id,
+            success: function (response) {
+                console.log(response);
+                loadPersons();
+            },
+            error: function (error) {
+                console.log(error);
+            },
+        });
+    }
+
+    function updatePerson(id, firstName, lastName, age) {
+        var data = {
+            firstName: $("#first-name-" + id).val(),
+            lastName: $("#last-name-" + id).val(),
+            age: $("#age-" + id).val(),
+        };
+        $.ajax({
+            type: "PUT",
+            url: "/api/persons/" + id,
+            data: JSON.stringify(data),
+            contentType: "application/json",
+            success: function (response) {
+                console.log(response);
+                loadPersons();
+            },
+            error: function (error) {
+                console.log(error);
+            },
+        });
+    }
+
+
+    $(document).on("click", "#add-btn", function () {
+        var firstName = $("#firstName").val();
+        var lastName = $("#lastName").val();
+        var age = $("#age").val();
+        addPerson(firstName, lastName, age);
+    });
+
+    $(document).on("click", ".update-btn", function () {
+        var id = $(this).attr("data-id");
+        var firstName = $("#first-name-" + id).val();
+        var lastName = $("#last-name-" + id).val();
+        var age = $("#age-" + id).val();
+        updatePerson(id, firstName, lastName, age);
+    });
+
+
+    $(document).on("click", ".delete-btn", function () {
+        var id = $(this).attr("data-id");
+        deletePerson(id);
+    });
+
+    loadPersons();
+
+</script>
 </body>
 </html>

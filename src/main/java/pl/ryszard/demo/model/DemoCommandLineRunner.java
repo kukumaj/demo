@@ -17,7 +17,8 @@ public class DemoCommandLineRunner implements CommandLineRunner {
     public void run(String... args) {
         Person person = new Person();
         person.setName("John Doe");
-        personRepository.save(person);
+        person.setId(1l);
+//        personRepository.save(person);
 
         List<Person> people = personRepository.findAll();
         System.out.println("People: " + people);
